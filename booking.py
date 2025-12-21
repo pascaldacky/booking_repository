@@ -21,7 +21,7 @@ def submit_booking():
     people = request.form.get("people", '')
     tour = request.form.get("tour", '')
     date = request.form.get("date", '')
-    requests_special = request.form.get("requests", '')
+    requests = request.form.get("requests", '')
     
     # Save booking to file
     with open("bookings.txt", "a") as f:
