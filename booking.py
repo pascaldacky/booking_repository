@@ -13,7 +13,7 @@ def booking_form():
 
 @app.route("/submit_booking", methods=["POST"])
 def submit_booking():
-       first_name = request.form["first_name"]
+    first_name = request.form["first_name"]
     last_name = request.form["last_name"]
     email = request.form["email"]
     phone = request.form["phone"]
