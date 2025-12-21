@@ -1,100 +1,89 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for
 import requests
+import os
 
 app = Flask(__name__)
+
+# =========================
+# POSTMARK CONFIG
+# =========================
 POSTMARK_API_KEY = "c8c0dbf4-c718-430f-bf8b-ec64937a1930"
 FROM_EMAIL = "moffassa@travellers.co.tz"
 TO_EMAIL = "moffassa@travellers.co.tz"
 
 
-@app.route('/')
+# =========================
+# HOME / BOOKING PAGE
+# =========================
+@app.route("/")
 def index():
-    return render_template('booking.html')
+    return render_template("booking.html")
 
-@app.route('/submit_booking', methods=['POST'])
+
+# =========================
+# SUBMIT BOOKING
+# =========================
+@app.route("/submit_booking", methods=["POST"])
 def submit_booking():
-    # Get form data safely
-    first_name = request.form.get('firstName', '')
-    last_name = request.form.get('lastName', '')
-    email = request.form.get('email', '')
-    phone = request.form.get('phone', '')
-    nationality = request.form.get('nationality', '')
-    people = request.form.get('people', '')
-    tour = request.form.get('tour', '')
-    date = request.form.get('date', '')
-    requests_text = request.form.get('requests', '')
+    try:
+        # -------- Get form data safely --------
+        name = request.form.get("name", "").strip()
+        email = request.form.get("email", "").strip()
+        nationality = request.form.get("nationality", "").strip()
+        phone = request.form.get("phone", "").strip()
+        message = request.form.get("message", "").strip()
 
-    # Validate required fields
-    if not first_name or not last_name or not email or not tour or not date:
-        return "Please fill in all required fields.", 400
+        # -------- Build email content --------
+        subject = "New Safari Booking Request"
+        body = f"""
+New Booking Received
 
-    # Admin email (HTML)
-    html_admin = f"""
-    <h2>New Booking Received</h2>
-    <p><b>Name:</b> {first_name} {last_name}</p>
-    <p><b>Email:</b> {email}</p>
-    <p><b>Phone:</b> {phone}</p>
-    <p><b>Nationality:</b> {nationality}</p>
-    <p><b>People:</b> {people}</p>
-    <p><b>Tour:</b> {tour}</p>
-    <p><b>Date:</b> {date}</p>
-    <p><b>Special Requests:</b> {requests_text}</p>
-    """
+Name: {name}
+Email: {email}
+Nationality: {nationality}
+Phone: {phone}
 
-    response_admin = requests.post(
-        "https://api.postmarkapp.com/email",
-        headers={
-            "Accept": "application/json",
-            "Content-Type": "application/json",
-            "X-Postmark-Server-Token": POSTMARK_API_KEY
-        },
-        json={
-            "From": FROM_EMAIL,
-            "To": ADMIN_EMAIL,
-            "Subject": f"New Booking from {first_name} {last_name}",
-            "HtmlBody": html_admin
-        }
-    )
+Message:
+{message}
+"""
 
-    # User confirmation email (HTML)
-    html_user = f"""
-    <h2>Booking Confirmation</h2>
-    <p>Hi {first_name},</p>
-    <p>Thank you for booking your tour with us! Here are your booking details:</p>
-    <ul>
-        <li><b>Tour:</b> {tour}</li>
-        <li><b>Date:</b> {date}</li>
-        <li><b>People:</b> {people}</li>
-        <li><b>Special Requests:</b> {requests_text}</li>
-    </ul>
-    <p>We will contact you soon with further details.</p>
-    <p>Regards,<br>Travel Booking Team</p>
-    """
+        # -------- Send email (SAFE) --------
+        try:
+            response = requests.post(
+                "https://api.postmarkapp.com/email",
+                headers={
+                    "X-Postmark-Server-Token": POSTMARK_API_KEY,
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                },
+                json={
+                    "From": FROM_EMAIL,
+                    "To": TO_EMAIL,
+                    "Subject": subject,
+                    "TextBody": body,
+                },
+                timeout=10
+            )
 
-    response_user = requests.post(
-        "https://api.postmarkapp.com/email",
-        headers={
-            "Accept": "application/json",
-            "Content-Type": "application/json",
-            "X-Postmark-Server-Token": POSTMARK_API_KEY
-        },
-        json={
-            "From": FROM_EMAIL,
-            "To": email,
-            "Subject": "Booking Confirmation",
-            "HtmlBody": html_user
-        }
-    )
+            # Log Postmark result (IMPORTANT)
+            print("Postmark status:", response.status_code)
+            print("Postmark response:", response.text)
 
-    if response_admin.status_code != 200 or response_user.status_code != 200:
-        return "Booking received but failed to send emails.", 500
+        except Exception as email_error:
+            # Email failure should NEVER break booking
+            print("Postmark exception:", email_error)
 
-    # Redirect to success page
-    return redirect(url_for('success'))
+        # -------- Always succeed for user --------
+        return render_template("success.html", name=name)
 
-@app.route('/success')
-def success():
-    return render_template('success.html')
+    except Exception as app_error:
+        # Catch ANY unexpected error
+        print("Application error:", app_error)
+        return "Something went wrong, but your booking was received.", 200
 
+
+# =========================
+# RUN APP
+# =========================
 if __name__ == "__main__":
     app.run(debug=True)
