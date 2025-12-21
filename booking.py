@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 import requests
 
 app = Flask(__name__)
-POSTMARK_API_KEY = "6945d30b-b3c9-4b49-a9ed-79898895acef"
+POSTMARK_API_KEY = "c8c0dbf4-c718-430f-bf8b-ec64937a1930"
 FROM_EMAIL = "moffassa@travellers.co.tz"
 TO_EMAIL = "moffassa@travellers.co.tz"
 
