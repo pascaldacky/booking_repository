@@ -43,8 +43,7 @@ Email: {email}
 Nationality: {nationality}
 Phone: {phone}
 
-Message:
-{message}
+Message: {message}
 """
 
         # -------- Send email (SAFE) --------
