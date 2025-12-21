@@ -13,15 +13,15 @@ def booking_form():
 
 @app.route("/submit_booking", methods=["POST"])
 def submit_booking():
-    first_name = request.form["first_name"]
-    last_name = request.form["last_name"]
-    email = request.form["email"]
-    phone = request.form["phone"]
-    nationality = request.form["nationality"]
-    people = request.form["people"]
-    tour = request.form["tour"]
-    date = request.form["date"]
-    requests_special = request.form["requests"]
+    first_name = request.form.get("first_name", '')
+    last_name = request.form.get("last_name", '')
+    email = request.form.get("email", '')
+    phone = request.form.get("phone", '')
+    nationality = request.form.get("nationality", '')
+    people = request.form.get("people", '')
+    tour = request.form.get("tour", '')
+    date = request.form.get("date", '')
+    requests_special = request.form.get("requests", '')
     
     # Save booking to file
     with open("bookings.txt", "a") as f:
