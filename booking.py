@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template
 import requests
 import os
 
@@ -36,18 +36,59 @@ def submit_booking():
 
         # -------- Build email content --------
         banner = "https://moffassatravellers.co.tz/insta2.jpg"
-        subject = "New Safari Booking Request"
-        body = f"""<html>
-New Booking Received
-<img src="{banner}" width="100%" style="border-radius:6px;">
+        subject = "📸 New Safari Booking Request"
 
-First_Name: {first_name}
-Last Name: {last_name}
-Email: {email}
-Nationality: {nationality}
-Phone: {phone}
+        body = f"""
+<!DOCTYPE html>
+<html>
+  <body style="margin:0; padding:0; background:#f4f4f4; font-family: Arial, sans-serif;">
+    <table width="100%" cellpadding="0" cellspacing="0">
+      <tr>
+        <td align="center" style="padding:20px;">
 
-Message: {message}
+          <table width="600" cellpadding="0" cellspacing="0"
+                 style="background:#ffffff; border-radius:8px; overflow:hidden;">
+
+            <!-- Banner -->
+            <tr>
+              <td>
+                <img src="{banner}" width="600" style="display:block;" alt="Safari Booking">
+              </td>
+            </tr>
+
+            <!-- Content -->
+            <tr>
+              <td style="padding:20px; color:#333;">
+                <h2 style="margin-top:0;">New Safari Booking Received</h2>
+
+                <p><strong>First Name:</strong> {first_name}</p>
+                <p><strong>Last Name:</strong> {last_name}</p>
+                <p><strong>Email:</strong> {email}</p>
+                <p><strong>Nationality:</strong> {nationality}</p>
+                <p><strong>Phone:</strong> {phone}</p>
+
+                <p><strong>Message:</strong></p>
+                <p style="background:#f9f9f9; padding:10px; border-radius:4px;">
+                  {message}
+                </p>
+
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td align="center"
+                  style="padding:15px; font-size:12px; color:#777;">
+                © 2025 Moffassa Travellers · Tanzania
+              </td>
+            </tr>
+
+          </table>
+
+        </td>
+      </tr>
+    </table>
+  </body>
 </html>
 """
 
@@ -64,24 +105,20 @@ Message: {message}
                     "From": FROM_EMAIL,
                     "To": TO_EMAIL,
                     "Subject": subject,
-                    "TextBody": body,
+                    "HtmlBody": body,   # ✅ ONLY REQUIRED CHANGE
                 },
                 timeout=10
             )
 
-            # Log Postmark result (IMPORTANT)
             print("Postmark status:", response.status_code)
             print("Postmark response:", response.text)
 
         except Exception as email_error:
-            # Email failure should NEVER break booking
             print("Postmark exception:", email_error)
 
-        # -------- Always succeed for user --------
         return render_template("success.html", first_name=first_name)
 
     except Exception as app_error:
-        # Catch ANY unexpected error
         print("Application error:", app_error)
         return "Something went wrong, but your booking was received.", 200
 
