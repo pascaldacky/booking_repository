@@ -34,9 +34,11 @@ def submit_booking():
         message = request.form.get("message", "").strip()
 
         # -------- Build email content --------
+        banner = "https://moffassatravellers.co.tz/insta2.jpg"
         subject = "New Safari Booking Request"
-        body = f"""
+        body = f"""<html>
 New Booking Received
+<img src="{banner}" width="100%" style="border-radius:6px;">
 
 Name: {name}
 Email: {email}
@@ -44,6 +46,7 @@ Nationality: {nationality}
 Phone: {phone}
 
 Message: {message}
+</html>
 """
 
         # -------- Send email (SAFE) --------
