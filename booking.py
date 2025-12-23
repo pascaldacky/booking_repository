@@ -116,7 +116,7 @@ def submit_booking():
         except Exception as email_error:
             print("Postmark exception:", email_error)
 
-        return render_template("success.html", first_name=first_name)
+        return render_template("success.html", name=name)
 
     except Exception as app_error:
         print("Application error:", app_error)
