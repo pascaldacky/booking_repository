@@ -53,7 +53,7 @@ def submit_booking():
         message = request.form.get("message", "").strip()
 
         # -------- Image / WhatsApp config --------
-        banner = "https://moffassatravellers.co.tz/assets/img/sere2.webp"
+        banner = "https://moffassatravellers.co.tz/assets/img/zanzibar2.webp"
         whatsapp_number = "255745224845"  # Your WhatsApp number
         confirm_link = f"https://moffassatravellers.co.tz/confirm-booking?email={email}"
 
