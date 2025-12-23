@@ -27,7 +27,8 @@ def index():
 def submit_booking():
     try:
         # -------- Get form data safely --------
-        name = request.form.get("name", "").strip()
+        first_name = request.form.get("first_name", "").strip()
+        last_name = request.form.get("last_name", "").strip()
         email = request.form.get("email", "").strip()
         nationality = request.form.get("nationality", "").strip()
         phone = request.form.get("phone", "").strip()
@@ -40,7 +41,8 @@ def submit_booking():
 New Booking Received
 <img src="{banner}" width="100%" style="border-radius:6px;">
 
-Name: {name}
+First_Name: {first_name}
+Last Name: {last_name}
 Email: {email}
 Nationality: {nationality}
 Phone: {phone}
@@ -76,7 +78,7 @@ Message: {message}
             print("Postmark exception:", email_error)
 
         # -------- Always succeed for user --------
-        return render_template("success.html", name=name)
+        return render_template("success.html", first_name=first_name)
 
     except Exception as app_error:
         # Catch ANY unexpected error
