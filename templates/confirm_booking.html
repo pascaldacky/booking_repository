@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Booking Confirmed</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .btn {
+      display: inline-block;
+      background: #25D366;
+      color: #fff;
+      padding: 12px 25px;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    h1 { color: #198754; }
+    p { color: #333; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>✅ Booking Confirmed!</h1>
+    <p>The booking for <strong>{{ customer_name }}</strong> has been successfully confirmed.</p>
+    <p>An email has been sent to notify the customer.</p>
+    <a href="/" class="btn">Back to Dashboard</a>
+  </div>
+</body>
+</html>
