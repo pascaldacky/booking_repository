@@ -61,7 +61,7 @@ def submit_booking():
     safe_email = quote(email)
 
     confirm_link = (
-        f"https://booking-repository-21.onrender.com/confirm-booking"
+        f"https://booking-repository-22.onrender.com/confirm-booking"
         f"?email={safe_email}&first_name={quote(first_name)}&last_name={quote(last_name)}"
     )
 
