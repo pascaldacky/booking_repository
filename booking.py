@@ -167,6 +167,18 @@ Warm regards,<br>
         print("Application error:", app_error)
         return "Something went wrong, but your booking was received.", 200
 
+@app.route("/confirm-booking")
+def confirm_booking():
+    email = request.args.get("email")
+    first_name = request.args.get("first_name", "")  # optional if passed
+    last_name = request.args.get("last_name", "")
+
+    # TODO: Here you can add DB logic to mark as confirmed
+    # For now, we just render a confirmation page
+
+    customer_name = f"{first_name} {last_name}" if first_name else email
+    return render_template("confirm_booking.html", customer_name=customer_name)
+
 # =========================
 # RUN APP
 # =========================
